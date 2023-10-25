@@ -1,2 +1,2 @@
-# codingChallenge
+# CodingChallenge
 Budgeting and Expense Tracker
