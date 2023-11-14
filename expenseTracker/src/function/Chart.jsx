@@ -53,11 +53,11 @@ const PieChart = () => {
     <div>
       <canvas ref={canvasRef} id="myPieChart" width="400" height="400"></canvas>
       <div>
-        <h3>Legend</h3>
+        <h3>Categories</h3>
         <ul>
           {data.map(({ label, color, value }, index) => (
             <li key={index} style={{ color }}>
-              {label}: {value}
+              {label}: ${value} ({((value / data.reduce((acc, { value }) => acc + value, 0)) * 100).toFixed(2)}%)
             </li>
           ))}
         </ul>

@@ -16,6 +16,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 )
 
 /*
+
+fix when add item, item added twice
 Add function,
 update function,
 delete function

@@ -1,7 +1,9 @@
 <?php
 
 require_once("../database_config.php");
+
 header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Headers: Content-Type");  // Add this line to allow "Content-Type" header
 header("Content-Type: application/json");
 
 // Create connection
@@ -20,23 +22,34 @@ $date = isset($_GET["date"])?$_GET["date"]:"";
 $memo = isset($_GET["memo"])?$_GET["memo"]:"";
 $cat = isset($_GET["cat"])?$_GET["cat"]:"";
 
+if($cat == ""){
+    $cat = 1;
+}
+
 //$formattedDate = $date->format('Y-m-d');
 $formattedDate = date('Y-m-d', strtotime($date));
 
 
 //$key = isset($_GET["APIKEY"])?$_GET["APIKEY"]:"";
+if($date == ""){
+    // Prepare and bind the SQL statement
+    $stmt = $conn->prepare("INSERT INTO expense (name, amount, memo, catID) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("sdsi", $name, $amount, $memo, $cat);
+}
+else{
+    // Prepare and bind the SQL statement
+    $stmt = $conn->prepare("INSERT INTO expense (name, amount, date, memo, catID) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sdssi", $name, $amount, $formattedDate, $memo, $cat);
+}
 
-// Prepare and bind the SQL statement
-$stmt = $conn->prepare("INSERT INTO expense (name, amount, date, memo) VALUES (?, ?, ?, ?)");
-$stmt->bind_param("sdss", $name, $amount, $formattedDate, $memo);
 
 // Execute the statement
 $result = $stmt->execute();
 
 if ($result === TRUE) {
-    echo "New record created successfully";
+    echo json_encode(["message" => "New record created successfully"]);
 } else {
-    echo "Error: " . $stmt->error;
+    echo json_encode(["error" => "Error: " . $stmt->error]);
 }
 
 // Close the statement and connection
