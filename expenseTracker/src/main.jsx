@@ -16,7 +16,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 )
 
 /*
-
+fix sort date memo
+add icon for sort
 fix when add item, item added twice
 Add function,
 update function,

@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import './App.css'
 
-import AddExpense from './components/AddExpense.jsx'
+import AddExpense from './components/ExpenseInput.jsx'
 import ShowExpense from './components/ShowExpense.jsx'
 
 

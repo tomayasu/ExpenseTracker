@@ -26,6 +26,8 @@ if($cat == ""){
     $cat = 1;
 }
 
+$name = ucfirst($name);
+
 //$formattedDate = $date->format('Y-m-d');
 $formattedDate = date('Y-m-d', strtotime($date));
 
