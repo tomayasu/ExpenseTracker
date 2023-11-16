@@ -44,10 +44,22 @@
 
 /* App.css */
 .bottomContainer {
-  position: fixed;
+  
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: #da2323; /* Optional background color */
   padding: 10px; /* Optional padding */
 }
+
+.app-container {
+  height: 100vh; /* Set the height of the container to fill the viewport */
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+  padding: 20px; /* Add padding as needed */
+}
+
+.bottomContainer {
+  margin-top: 20px; /* Add some space between the components */
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+}
+

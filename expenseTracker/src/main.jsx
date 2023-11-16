@@ -21,7 +21,7 @@ add icon for sort
 fix when add item, item added twice
 Add function,
 update function,
-delete function
+delete function: doen
 sort by each category
 search
 one month, one year

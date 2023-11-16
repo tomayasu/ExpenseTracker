@@ -71,13 +71,12 @@ function ExpenseInput() {
 <Select
   placeholder="Select Category"
   value={category}
-  onChange={(e) => setCategory(e.target.options[e.target.selectedIndex].getAttribute('data-key'))}
+  onChange={(e) => setCategory(e.target.value)}
 >
   {categoryOptions.map((categoryOption) => (
     <option
       key={categoryOption.catID}
-      value={categoryOption.name}
-      data-key={categoryOption.catID}
+      value={categoryOption.catID} // Set the value directly to catID
       style={{ backgroundColor: categoryOption.color }}
     >
       {categoryOption.name}
