@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import HandleAddExpense from '../functions/HandleAddExpense.jsx'
+import { Select } from '@chakra-ui/react'
 
 
 function ExpenseInput() {
@@ -49,30 +50,7 @@ function ExpenseInput() {
         onChange={(e) => setExpenseName(e.target.value)}           
       />
 
-      <Menu>
-        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-          Category
-        </MenuButton>
-        <MenuList>
-          {categoryOptions.map((categoryOption) => (
-            <MenuItem
-              key={categoryOption.catID}
-              onClick={() => setCategory(categoryOption.catID)}
-              style={{ backgroundColor: categoryOption.color }}
-            >
-              {categoryOption.name}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
-
-      <Input
-        placeholder="Select Date and Time"
-        size="md"
-        type="date"
-        onChange={(e) => setDateTime(e.target.value)}
-      />
-      <NumberInput defaultValue={0} precision={2} step={10} min={0}>
+<NumberInput defaultValue={0} precision={2} step={10} min={0}>
         <NumberInputField
           value={amount}
           onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
@@ -82,6 +60,31 @@ function ExpenseInput() {
           <NumberDecrementStepper />
         </NumberInputStepper>
       </NumberInput>
+
+      <Input
+        placeholder="Select Date and Time"
+        size="md"
+        type="date"
+        onChange={(e) => setDateTime(e.target.value)}
+      />
+
+<Select
+  placeholder="Select Category"
+  value={category}
+  onChange={(e) => setCategory(e.target.options[e.target.selectedIndex].getAttribute('data-key'))}
+>
+  {categoryOptions.map((categoryOption) => (
+    <option
+      key={categoryOption.catID}
+      value={categoryOption.name}
+      data-key={categoryOption.catID}
+      style={{ backgroundColor: categoryOption.color }}
+    >
+      {categoryOption.name}
+    </option>
+  ))}
+</Select>
+
 
       <Input
         placeholder='Memo'
@@ -96,3 +99,23 @@ function ExpenseInput() {
 }
 
 export default ExpenseInput;
+
+/*<Menu>
+        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+          Category
+        </MenuButton>
+        <MenuList>
+          {categoryOptions.map((categoryOption) => (
+            <MenuItem
+              key={categoryOption.catID}
+              onClick={() => 
+                {console.log('Category clicked:', categoryOption.catID);
+                  setCategory(categoryOption.catID);}}
+              style={{ backgroundColor: categoryOption.color }}
+            >
+              {categoryOption.name}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Menu>
+      */

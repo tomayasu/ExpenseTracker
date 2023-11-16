@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/react';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-} from '@chakra-ui/react';
+import {Table, Thead, Tbody, Tr, Th, Td, TableCaption, TableContainer, } from '@chakra-ui/react';
 import PieChart from './Chart.jsx';
 import DeleteExpense from './DeleteExpense.jsx'
-
+import { Menu, MenuButton, MenuList, MenuItem, } from '@chakra-ui/react';
+import { ChevronDownIcon } from '@chakra-ui/icons';
+import { Input} from '@chakra-ui/react';
+import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, } from '@chakra-ui/react';
 
 async function fetchData(setData) {
   try {
@@ -30,6 +24,15 @@ function GetExpense() {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
   const [editModes, setEditModes] = useState({});
+  const [amount, setAmount] = useState(0);
+
+  const [editedName, setEditedName] = useState('');
+  const [editedAmount, setEditedAmount] = useState(0);
+  const [editDate, setEditDate] = useState('');
+  const [editCategory, setEditCategory] = useState('');
+  const [editMemo, setEditMemo] = useState('');
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
   const handleShowGraph = async () => {
     setShowGraph(!showGraph);
@@ -40,6 +43,24 @@ function GetExpense() {
 
     if (currentEditMode) {
       if (window.confirm('Do you want to update?')) {
+        
+        const editedData = {
+          name: editedName,
+          amount: editedAmount,
+          date: editDate,
+          category: editCategory,
+          memo: editMemo
+          // ... other edited fields
+        };
+
+        setData((prevData) =>
+        prevData.map((item) =>
+          item.expenseID === expenseID ? { ...item, ...editedData } : item
+        )
+
+      );
+        console.log(setData);
+
         alert('Updated');
       } else {
         alert('Not Updated');
@@ -71,6 +92,29 @@ function GetExpense() {
       fetchData(setData); // Fetch updated data after deletion
     }
   };
+
+  const handleInputChange = (expenseID, field, value) => {
+    // Update the state with the new input value
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.expenseID === expenseID ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost/ExpenseTracker/database/api/category/read.php');
+        const categoryData = await response.json();
+        setCategoryOptions(categoryData);
+      } catch (error) {
+        console.error('Error fetching category data:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const sortedData = [...data].sort((a, b) => {
     const aValue = a[sortBy];
@@ -109,7 +153,6 @@ function GetExpense() {
       return 0;
     }
   });  
-  
 
   return (
     <div>
@@ -129,6 +172,7 @@ function GetExpense() {
               <Th onClick={() => handleSort('date')}>Date</Th>
               <Th onClick={() => handleSort('categoryName')}>Category</Th>
               <Th onClick={() => handleSort('memo')}>Memo</Th>
+              {/* Add headers for other fields */}
               <Th></Th>
               <Th></Th>
             </Tr>
@@ -136,11 +180,83 @@ function GetExpense() {
           <Tbody>
             {sortedData.map((item) => (
               <Tr key={item.expenseID}>
-                <Td>{item.name}</Td>
-                <Td>${item.amount}</Td>
-                <Td>{item.date}</Td>
-                <Td>{item.categoryName}</Td>
-                <Td>{item.memo}</Td>
+                <Td>
+                  {editModes[item.expenseID] ? (
+                    <input
+                    type="text"
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    />
+                  ) : (
+                    item.name
+                  )}
+                </Td>
+                <Td>
+                  {editModes[item.expenseID] ? (
+                    <NumberInput defaultValue={editedAmount} precision={2} step={10} min={0}>
+                    <NumberInputField
+                      value={editedAmount}
+                      onChange={(e) => setEditedAmount(parseFloat(e.target.value) || 0)}
+                    />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                  ) : (
+                    `$${item.amount}`
+                  )}
+                </Td>
+                <Td>
+                  {editModes[item.expenseID] ? (
+                    <Input
+                    placeholder="Select Date and Time"
+                    size="md"
+                    type="date"
+                    value={editDate}
+                    onChange={(e) => setEditDate(e.target.value)}
+                  />
+                  ) : (
+                    item.date
+                  )}
+                </Td>
+                <Td>
+                  {editModes[item.expenseID] ? (
+                    
+                    <Menu>
+                    <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                      Category
+                    </MenuButton>
+                    <MenuList>
+                      {categoryOptions.map((categoryOption) => (
+                        <MenuItem
+                          key={categoryOption.catID}
+                          onClick={() => setCategory(categoryOption.catID)}
+                          style={{ backgroundColor: categoryOption.color }}
+                          onChange={(e) => setEditDate(e.target.value)}
+                        >
+                          {categoryOption.name}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </Menu>
+                  
+                  ) : (
+                    item.categoryName
+                  )}
+                </Td>
+                <Td>
+                {editModes[item.expenseID] ? (
+              <input
+                type="text"
+                value={editMemo}
+                onChange={(e) => setEditMemo(e.target.value)}
+              />
+                  ) : (
+                    item.memo
+                  )}
+                </Td>
+                {/* Add cells for other fields */}
                 <Td>
                   <Button
                     colorScheme={editModes[item.expenseID] ? 'yellow' : 'blue'}
@@ -159,22 +275,9 @@ function GetExpense() {
           </Tbody>
         </Table>
       </TableContainer>
-
       {showGraph && <PieChart />}
     </div>
   );
-}
-
-/*function deleteExpense() {
-  
-  if(confirm('??????????Do you want to delete???????!!!!!!!!')){
-    alert("Deleted");
-  }
-  else{
-    alert("Not Deleted");
-  }
-  
-  // Add your logic here
-}*/
+}  
 
 export { GetExpense, fetchData };

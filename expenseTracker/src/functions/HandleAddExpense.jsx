@@ -9,7 +9,7 @@ const HandleAddExpense = async (expenseName, category, dateTime, amount, memo) =
       amount: parseFloat(amount) || 0,
       memo,
     };
-    if (!expenseName || !category || !dateTime || isNaN(parseFloat(amount))) {
+    if (!expenseName || !dateTime || isNaN(parseFloat(amount))) {
       alert('Please fill in all required fields.');
       return;
     }

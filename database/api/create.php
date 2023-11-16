@@ -20,7 +20,7 @@ $name = isset($_GET["name"])?$_GET["name"]:"";
 $amount = isset($_GET["amount"])?$_GET["amount"]:"";
 $date = isset($_GET["date"])?$_GET["date"]:"";
 $memo = isset($_GET["memo"])?$_GET["memo"]:"";
-$cat = isset($_GET["cat"])?$_GET["cat"]:"";
+$cat = isset($_GET["catID"])?$_GET["catID"]:"";
 
 if($cat == ""){
     $cat = 1;
