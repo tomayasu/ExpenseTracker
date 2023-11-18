@@ -63,3 +63,10 @@
 /*  overflow-y: auto; /* Enable vertical scrolling when content overflows */
 }
 
+.login{
+  background-color: blue;
+}
+
+.log{
+  font-size: 30px;
+}

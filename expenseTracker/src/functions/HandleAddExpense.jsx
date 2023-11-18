@@ -32,7 +32,7 @@ const HandleAddExpense = async (expenseName, category, dateTime, amount, memo) =
       //const result = await response.json();
       //console.log(result);
       // Process the result as needed
-      //alert('Expense added successfully!');
+      alert('Expense added successfully!');
   } catch (error) {
       console.error('Error adding expense:', error.message);
       alert('An unexpected error occurred while adding the expense.');

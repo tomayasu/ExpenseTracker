@@ -17,8 +17,8 @@ const LoginScreen = ({ onLogin }) => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
+    <div fontSize="30px" className="login-container">
+      <h2 class='log'>Expense Tracker Login!</h2>
       <form onSubmit={(e) => e.preventDefault()}>
         <div className="input-group">
           <label>Username</label>
@@ -36,7 +36,7 @@ const LoginScreen = ({ onLogin }) => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button onClick={handleLogin}>Login</button>
+        <button class='login' onClick={handleLogin} >Login</button>
       </form>
     </div>
   );
