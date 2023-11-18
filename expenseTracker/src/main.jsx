@@ -16,6 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 )
 
 /*
+log in
 fix sort date memo
 add icon for sort
 fix when add item, item added twice
@@ -25,6 +26,7 @@ delete function: doen
 sort by each category
 search
 one month, one year
+update button two pushed
 
 npm install @chakra-ui/react @chakra-ui/icons
 

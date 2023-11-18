@@ -7,6 +7,7 @@ import { Menu, MenuButton, MenuList, MenuItem, } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Input} from '@chakra-ui/react';
 import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, } from '@chakra-ui/react';
+import { Select } from '@chakra-ui/react'
 
 async function fetchData(setData) {
   try {
@@ -33,54 +34,78 @@ function GetExpense() {
   const [editMemo, setEditMemo] = useState('');
 
   const [categoryOptions, setCategoryOptions] = useState([]);
+  //const [category, setCategory] = useState('');
+
 
   const handleShowGraph = async () => {
     setShowGraph(!showGraph);
   };
 
-  const handleUpdateButtonClick = (expenseID) => {
+  const handleUpdateButtonClick = async (expenseID) => {
     const currentEditMode = editModes[expenseID];
-
+  
     if (currentEditMode) {
       if (window.confirm('Do you want to update?')) {
-        
-        const editedData = {
-          name: editedName,
-          amount: editedAmount,
-          date: editDate,
-          category: editCategory,
-          memo: editMemo
-          // ... other edited fields
-        };
+        const updatedData = data.map((item) =>
+          item.expenseID === expenseID
+            ? {
+                ...item,
+                name: editedName,
+                amount: editedAmount,
+                date: editDate,
+                category: editModes[expenseID] ? editCategory : item.category,
+                memo: editMemo,
+              }
+            : item
+        );
+  
+        try {
+          const response = await fetch(`http://localhost/ExpenseTracker/database/api/update.php?expenseID=${expenseID}&name=${editedName}&amount=${editedAmount}&date=${editDate}&memo=${editMemo}&catID=${editCategory}`, {
+            method: 'GET',
+            mode: 'cors',
+          });
 
-        setData((prevData) =>
-        prevData.map((item) =>
-          item.expenseID === expenseID ? { ...item, ...editedData } : item
-        )
-
-      );
-        console.log(setData);
-
-        alert('Updated');
+          console.log(response);
+  
+          const data = await response.json();
+  
+          if (response.ok) {
+            setData(updatedData);
+            setEditModes((prevEditModes) => ({
+              ...prevEditModes,
+              [expenseID]: !prevEditModes[expenseID],
+            }));
+            setEditCategory(''); // Reset editCategory after updating
+            alert('Updated');
+            fetchData(setData); 
+          } else {
+            alert('Failed to update expense');
+          }
+        } catch (error) {
+          console.error('Error updating expense:', error);
+          alert('Failed to update expense');
+        }
       } else {
         alert('Not Updated');
       }
     } else {
+      // Set editCategory when switching to edit mode
+      const expense = data.find((item) => item.expenseID === expenseID);
+      setEditedName(expense.name);
+      setEditedAmount(expense.amount);
+      setEditDate(expense.date);
+      setEditCategory(expense.category);
+      setEditMemo(expense.memo);
+      //setEditCategory(expense.catID);
+  
       setEditModes((prevEditModes) => ({
         ...prevEditModes,
         [expenseID]: !prevEditModes[expenseID],
       }));
     }
   };
-
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(field);
-      setSortOrder('asc');
-    }
-  };
+  
+  
 
   useEffect(() => {
     fetchData(setData);
@@ -92,6 +117,21 @@ function GetExpense() {
       fetchData(setData); // Fetch updated data after deletion
     }
   };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost/ExpenseTracker/database/api/category/read.php');
+        const categoryData = await response.json();
+        setCategoryOptions(categoryData);
+      } catch (error) {
+        console.error('Error fetching category data:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
 
   const handleInputChange = (expenseID, field, value) => {
     // Update the state with the new input value
@@ -221,29 +261,26 @@ function GetExpense() {
                   )}
                 </Td>
                 <Td>
-                  {editModes[item.expenseID] ? (
-                    
-                    <Menu>
-                    <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                      Category
-                    </MenuButton>
-                    <MenuList>
-                      {categoryOptions.map((categoryOption) => (
-                        <MenuItem
-                          key={categoryOption.catID}
-                          onClick={() => setCategory(categoryOption.catID)}
-                          style={{ backgroundColor: categoryOption.color }}
-                          onChange={(e) => setEditDate(e.target.value)}
-                        >
-                          {categoryOption.name}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </Menu>
-                  
-                  ) : (
-                    item.categoryName
-                  )}
+                {editModes[item.expenseID] ? (
+  <Select
+    placeholder="Select Category"
+    value={editCategory} // Update to use editCategory
+    onChange={(e) => setEditCategory(e.target.value)} // Update editCategory state
+  >
+    {categoryOptions.map((categoryOption) => (
+      <option
+        key={categoryOption.catID}
+        value={categoryOption.catID}
+        style={{ backgroundColor: categoryOption.color }}
+      >
+        {categoryOption.name}
+      </option>
+    ))}
+  </Select>
+) : (
+  item.categoryName
+)}
+
                 </Td>
                 <Td>
                 {editModes[item.expenseID] ? (
@@ -281,3 +318,29 @@ function GetExpense() {
 }  
 
 export { GetExpense, fetchData };
+
+/*
+{editModes[item.expenseID] ? (
+                    
+  <Menu>
+  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+    Category
+  </MenuButton>
+  <MenuList>
+    {categoryOptions.map((categoryOption) => (
+      <MenuItem
+        key={categoryOption.catID}
+        onClick={() => setCategory(categoryOption.catID)}
+        style={{ backgroundColor: categoryOption.color }}
+        onChange={(e) => setEditDate(e.target.value)}
+      >
+        {categoryOption.name}
+      </MenuItem>
+    ))}
+  </MenuList>
+</Menu>
+
+) : (
+  item.categoryName
+)}
+</Td>*/

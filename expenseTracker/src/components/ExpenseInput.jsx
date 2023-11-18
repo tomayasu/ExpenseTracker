@@ -19,6 +19,8 @@ import { Select } from '@chakra-ui/react'
 
 
 function ExpenseInput() {
+  console.log('ExpenseInput component rendered');
+
   const [expenseName, setExpenseName] = useState('');
   const [category, setCategory] = useState('');
   const [dateTime, setDateTime] = useState('');
@@ -56,8 +58,7 @@ function ExpenseInput() {
           onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
         />
         <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
+          
         </NumberInputStepper>
       </NumberInput>
 
@@ -90,7 +91,9 @@ function ExpenseInput() {
         value={memo}
         onChange={(e) => setMemo(e.target.value)}
       />
-      <Button colorScheme='blue' onClick={() => HandleAddExpense(expenseName, category, dateTime, amount, memo)}>
+      <Button colorScheme='blue' onClick={() => 
+        {HandleAddExpense(expenseName, category, dateTime, amount, memo)
+        }}>
         Add Expense
       </Button>
     </>

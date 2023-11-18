@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import './App.css'
 
-import AddExpense from './components/ExpenseInput.jsx'
+import ExpenseInput from './components/ExpenseInput.jsx'
 import ShowExpense from './components/ShowExpense.jsx'
 import React from 'react';
 
@@ -12,7 +12,7 @@ import React from 'react';
 function App() {
   return (
     <div className="app-container">
-      <AddExpense />
+      <ExpenseInput />
       <div className="bottomContainer">
         <ShowExpense />
       </div>
