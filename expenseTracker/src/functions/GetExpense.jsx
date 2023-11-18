@@ -7,7 +7,7 @@ import { Menu, MenuButton, MenuList, MenuItem, } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Input} from '@chakra-ui/react';
 import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, } from '@chakra-ui/react';
-import { Select } from '@chakra-ui/react'
+import { Select, Box } from '@chakra-ui/react'
 
 async function fetchData(setData) {
   try {
@@ -197,10 +197,16 @@ function GetExpense() {
   return (
     <div>
       <h2>
+      <Box mt={8} fontSize={"28px"}> 
         Expense History
-        <Button colorScheme='purple' onClick={handleShowGraph}>
+      </Box>
+
+      <Box>
+      <Button colorScheme='purple' onClick={handleShowGraph}>
           Show Graph
         </Button>
+      </Box>
+        
       </h2>
       <TableContainer>
         <Table variant='striped' colorScheme='green'>
@@ -226,6 +232,8 @@ function GetExpense() {
                     type="text"
                     value={editedName}
                     onChange={(e) => setEditedName(e.target.value)}
+                    size="lg"
+                    width="100px"
                     />
                   ) : (
                     item.name
@@ -233,7 +241,7 @@ function GetExpense() {
                 </Td>
                 <Td>
                   {editModes[item.expenseID] ? (
-                    <NumberInput defaultValue={editedAmount} precision={2} step={10} min={0}>
+                    <NumberInput defaultValue={editedAmount} precision={2} step={10} min={0} width="110px">
                     <NumberInputField
                       value={editedAmount}
                       onChange={(e) => setEditedAmount(parseFloat(e.target.value) || 0)}
@@ -266,12 +274,14 @@ function GetExpense() {
     placeholder="Select Category"
     value={editCategory} // Update to use editCategory
     onChange={(e) => setEditCategory(e.target.value)} // Update editCategory state
+    width="160px"
   >
     {categoryOptions.map((categoryOption) => (
       <option
         key={categoryOption.catID}
         value={categoryOption.catID}
         style={{ backgroundColor: categoryOption.color }}
+        width="160px"
       >
         {categoryOption.name}
       </option>

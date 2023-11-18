@@ -45,7 +45,7 @@ function ExpenseInput() {
 
   return (
     <>
-      <Table>Expense Tracker</Table>
+      <Table fontSize={"30px"}>Expense Tracker</Table>
       <Input
         placeholder='Expense Name'
         value={expenseName}

@@ -18,17 +18,17 @@ if ($conn->connect_error) {
 // Fetch data from the database
 if($order != "") {
     if($ascDesc ==""){
-        $sql = "SELECT e.expenseID, e.catID, e.name, e.amount, e.date, e.memo, c.name AS categoryName FROM expense e join category c ON e.catID = c.catID order by $order";
+        $sql = "SELECT e.expenseID, e.catID, e.name, e.amount, e.date, e.memo, c.name AS categoryName FROM expense e join category c ON e.catID = c.catID where ( e.expenseID % 2 ) = 0 order by $order";
     }
     if($ascDesc == "desc"){
-        $sql = "SELECT e.expenseID, e.catID, e.name, e.amount, e.date, e.memo, c.name AS categoryName FROM expense e join category c ON e.catID = c.catID order by $order desc";
+        $sql = "SELECT e.expenseID, e.catID, e.name, e.amount, e.date, e.memo, c.name AS categoryName FROM expense e join category c ON e.catID = c.catID where ( e.expenseID % 2 ) = 0 order by $order desc";
     }
     else{
-        $sql = "SELECT e.expenseID, e.catID, e.name, e.amount, e.date, e.memo, c.name AS categoryName FROM expense e join category c ON e.catID = c.catID order by $order asc";
+        $sql = "SELECT e.expenseID, e.catID, e.name, e.amount, e.date, e.memo, c.name AS categoryName FROM expense e join category c ON e.catID = c.catID where ( e.expenseID % 2 ) = 0 order by $order asc";
     }
 }
 else{
-    $sql = "SELECT e.expenseID, e.catID, e.name, e.amount, e.date, e.memo, c.name AS categoryName FROM expense e join category c ON e.catID = c.catID";   
+    $sql = "SELECT e.expenseID, e.catID, e.name, e.amount, e.date, e.memo, c.name AS categoryName FROM expense e join category c ON e.catID = c.catID where ( e.expenseID % 2 ) = 0";   
 }
 $result = $conn->query($sql);
 $data = [];
